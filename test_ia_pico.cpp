@@ -88,23 +88,20 @@ int main() {
     printf("\n\n=== TFLite Micro en Pico 2 (Cortex-M33) 3 ===\n");
 
     // 2. Cargar el Modelo
-    // Usamos el dummy data definido arriba
     const tflite::Model* model = tflite::GetModel(logic_or_test);
     
     // Verificación de Schema
     if (model->version() != TFLITE_SCHEMA_VERSION) {
         printf("[INFO] Nota: La version del modelo (%ld) es distinta a la del Schema (%d).\n",
                model->version(), TFLITE_SCHEMA_VERSION);
-        printf("[INFO] Esto es normal con el modelo Dummy. Si llegamos aqui, la libreria funciona.\n");
     } else {
         printf("[OK] Modelo cargado y version correcta.\n");
     }
 
     // 3. Inicializar Resolver
     static tflite::MicroMutableOpResolver<5> resolver;
-    // Añadimos operaciones comunes para asegurar que el Linker las encuentre
     resolver.AddFullyConnected();
-    resolver.AddLogistic();
+    resolver.AddLogistic(); // Sigmoid
     resolver.AddRelu();
 
     // 4. Instanciar Interprete
@@ -116,7 +113,6 @@ int main() {
     );
 
     // 5. Asignar Memoria
-    // pero si compila y ejecuta hasta aquí, TU LIBRERÍA ESTÁ PERFECTA.
     printf("[INTENTO] Asignando tensores...\n");
     TfLiteStatus allocate_status = interpreter.AllocateTensors();
     
@@ -129,7 +125,6 @@ int main() {
 
     printf("== COMENZANDO INFERENCIA ==\n");
 
-    // Obtener el puntero al tensor de entrada
     float vin_0_list[4]={0.1, 4.5, 3.4, 1.4};
     float vin_1_list[4]={0.3, 4.5, 1.0, 3.0};
 
@@ -141,9 +136,7 @@ int main() {
         run_inference(&interpreter, vin_0_list[i], vin_1_list[i]);  
     }
 
-    // Bucle final
     while (true) {
-        // printf("TFLite Running...\n");
         gpio_put(LED_PIN, 1);
         sleep_ms(1000);
         gpio_put(LED_PIN, 0);

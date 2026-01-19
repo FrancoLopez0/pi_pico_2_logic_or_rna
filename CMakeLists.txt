@@ -30,10 +30,6 @@ include(pico_sdk_import.cmake)
 
 project(test_ia_pico C CXX ASM)
 
-set(PICO_CXX_ENABLE_EXCEPTIONS 1)
-
-set(PICO_CXX_ENABLE_RTTI 1)
-
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
@@ -74,14 +70,7 @@ target_include_directories(test_ia_pico PRIVATE
 )
 
 target_compile_options(ia_embed PRIVATE 
-    -fno-exceptions 
-    -fno-rtti
     -fno-threadsafe-statics
-)
-
-target_compile_options(test_ia_pico PRIVATE 
-    -fno-exceptions 
-    -fno-rtti
 )
 
 pico_set_program_name(test_ia_pico "test_ia_pico")
