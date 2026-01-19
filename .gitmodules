@@ -1,0 +1,3 @@
+[submodule "tflite_arm_m33_lib"]
+	path = tflite_arm_m33_lib
+	url = https://github.com/FrancoLopez0/tflite_arm_m33_lib.git
